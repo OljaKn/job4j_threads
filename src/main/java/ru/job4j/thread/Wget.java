@@ -14,14 +14,23 @@ public class Wget implements Runnable {
 
     @Override
     public void run() {
-        File file = new File("tmp.xml");
+        var startAt = System.currentTimeMillis();
+        var file = new File("tmp.xml");
         try (BufferedInputStream input = new BufferedInputStream(new URL(url).openStream());
              FileOutputStream output = new FileOutputStream(file)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
-            while ((bytesRead = input.read(dataBuffer, 0, dataBuffer.length)) != -1) {
+            int countDownload = 0;
+            while ((bytesRead = input.read(dataBuffer, 0, 1024)) != -1) {
+                countDownload += bytesRead;
+                if (countDownload >= speed) {
+                    long time = System.currentTimeMillis() - startAt;
+                    if (time < 1000) {
+                        Thread.sleep(time);
+                    }
+                    countDownload = 0;
+                }
                 output.write(dataBuffer, 0, bytesRead);
-                Thread.sleep(4);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,7 +40,7 @@ public class Wget implements Runnable {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        if (args.length == 0) {
+        if (args.length < 2) {
             throw new IllegalArgumentException("No all arguments.");
         }
         String url = args[0];
