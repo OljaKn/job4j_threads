@@ -15,9 +15,9 @@ public class Wget implements Runnable {
     @Override
     public void run() {
         var startAt = System.currentTimeMillis();
-        var file = new File("tmp.xml");
+        String filename = url.substring(url.lastIndexOf('/') + 1);
         try (BufferedInputStream input = new BufferedInputStream(new URL(url).openStream());
-             FileOutputStream output = new FileOutputStream(file)) {
+             FileOutputStream output = new FileOutputStream(filename)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
             int countDownload = 0;
@@ -29,6 +29,7 @@ public class Wget implements Runnable {
                         Thread.sleep(time);
                     }
                     countDownload = 0;
+                    startAt = System.currentTimeMillis();
                 }
                 output.write(dataBuffer, 0, bytesRead);
             }
