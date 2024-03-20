@@ -9,11 +9,9 @@ import java.util.Optional;
 public class AccountStorage {
     @GuardedBy("this")
     private final HashMap<Integer, Account> accounts = new HashMap<>();
-    private int id = 1;
 
     public synchronized boolean add(Account account) {
-        accounts.putIfAbsent(id++, account);
-        return true;
+        return accounts.putIfAbsent(account.id(), account) != null;
     }
 
     public synchronized boolean update(Account account) {
