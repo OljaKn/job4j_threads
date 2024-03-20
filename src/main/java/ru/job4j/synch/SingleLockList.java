@@ -8,6 +8,7 @@ import java.util.List;
 @ThreadSafe
 public class SingleLockList<T> implements Iterable<T> {
     private final List<T> list;
+
     public SingleLockList(final List<T> list) {
         this.list = copy(list);
     }
@@ -26,8 +27,6 @@ public class SingleLockList<T> implements Iterable<T> {
     }
 
     private synchronized List<T> copy(List<T> origin) {
-        List<T> rsl = new ArrayList<>();
-        rsl.addAll(origin);
-        return rsl;
+        return new ArrayList<>(origin);
     }
 }
