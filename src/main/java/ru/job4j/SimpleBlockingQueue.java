@@ -18,16 +18,12 @@ public class SimpleBlockingQueue<T> {
         this.size = size;
     }
 
-    public synchronized void offer(T value) {
+    public synchronized void offer(T value) throws InterruptedException {
         while (size == queue.size()) {
-            try {
                 wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         queue.offer(value);
-        notify();
+        notifyAll();
     }
 
     public synchronized T poll() throws InterruptedException {
@@ -38,7 +34,8 @@ public class SimpleBlockingQueue<T> {
                 e.printStackTrace();
             }
         }
-        notify();
-        return queue.poll();
+        T rsl = queue.poll();
+        notifyAll();
+        return rsl;
     }
 }
