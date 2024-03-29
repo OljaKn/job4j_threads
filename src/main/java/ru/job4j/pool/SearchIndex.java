@@ -19,7 +19,7 @@ public class SearchIndex<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (last - first < 10) {
-            return search(first, last);
+            return search();
         }
         int middle = (first + last) / 2;
         SearchIndex left = new SearchIndex(array, searchElement, first, middle);
@@ -29,9 +29,9 @@ public class SearchIndex<T> extends RecursiveTask<Integer> {
         return Math.max((Integer) left.join(), (Integer) right.join());
     }
 
-     private int search(int first, int last) {
+     private int search() {
          for (int i = first; i <= last; i++) {
-             if (searchElement == array[i]) {
+             if (searchElement.equals(array[i])) {
                  return i;
              }
          }
